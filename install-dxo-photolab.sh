@@ -624,6 +624,18 @@ fi
 cd "\$APP" && exec wine DxO.PhotoLab.exe "\$@"
 EOF
     chmod +x "$HOME/.local/bin/dxo-photolab"
+    # Icône de PhotoLab : la version 256 px est un PNG dans les ressources de DxO.PhotoLab.exe
+    local icon=wine ico="$WORK/icon" f
+    rm -rf "$ico"
+    7z e -y -o"$ico" "$(appdir)/DxO.PhotoLab.exe" '.rsrc/ICON/*' >/dev/null 2>&1 || true
+    for f in "$ico"/*; do
+        if [[ "$(head -c 4 "$f" 2>/dev/null | od -An -tx1 | tr -d ' \n')" == 89504e47 ]]; then
+            install -Dm644 "$f" "$HOME/.local/share/icons/hicolor/256x256/apps/dxo-photolab.png"
+            icon=dxo-photolab
+            break
+        fi
+    done
+    # StartupWMClass : classe des fenêtres Wine (nom de l'exe), pour que le dock les rattache à l'entrée
     cat > "$HOME/.local/share/applications/dxo-photolab.desktop" <<EOF
 [Desktop Entry]
 Name=DxO PhotoLab 9
@@ -631,7 +643,8 @@ Comment=Développement photo RAW (Wine)
 Exec=$HOME/.local/bin/dxo-photolab
 Type=Application
 Categories=Graphics;Photography;
-Icon=wine
+Icon=$icon
+StartupWMClass=dxo.photolab.exe
 EOF
 }
 
