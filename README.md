@@ -167,6 +167,7 @@ Le journal se trouve dans `~/.cache/dxo-photolab-install/install.log`.
 ```bash
 WINEPREFIX=~/.wine-dxo wineserver -k
 rm -rf ~/.wine-dxo ~/.cache/dxo-photolab-install ~/.local/share/dxo-photolab
-rm -f ~/.local/bin/dxo-photolab ~/.local/share/applications/dxo-photolab.desktop
+rm -f ~/.local/bin/dxo-photolab ~/.local/share/applications/dxo-photolab.desktop \
+    ~/.local/share/icons/hicolor/256x256/apps/dxo-photolab.png
 # facultatif : sudo apt remove winehq-staging wine-staging winbind
 ```
