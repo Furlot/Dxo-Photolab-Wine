@@ -167,6 +167,9 @@ step_vcrun2022() {
     wine "$d/vc_redist.x64.exe" /install /quiet /norestart || true
     wwait
     [[ -f "$PREFIX/drive_c/windows/system32/msvcp140.dll" ]] || die "Visual C++ 2022 non installé"
+    # concrt140 de Wine : Concurrency::details::_Concurrent_queue_iterator_base_v4 absent ->
+    # le chargement des images s'arrête (« Loading, please wait... »). DLL de Microsoft à la place.
+    wreg 'HKCU\Software\Wine\DllOverrides' /v concrt140 /t REG_SZ /d native,builtin
 }
 
 step_winetricks_misc() {
