@@ -605,6 +605,9 @@ step_launcher() {
 export WINEPREFIX="$PREFIX"
 export WINEDEBUG=-all DXVK_LOG_LEVEL=none VKD3D_DEBUG=none
 $vk
+# Kerberos : avec un ticket valide, la négociation Kerberos -> NTLM de Wine échoue
+# (SEC_E_BUFFER_TOO_SMALL) et l'export reste bloqué. Cache vide : NTLM directement.
+export KRB5CCNAME="FILE:$PREFIX/.no-kerberos-ccache"
 # WebView2 : pas de sandbox Chromium sous Wine, et rendu logiciel (DirectComposition non supporté)
 export WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--no-sandbox --disable-gpu --disable-gpu-compositing"
 python3 -I "$LIBDIR/fix-user-config.py" "\$WINEPREFIX" "$DXO_LANG" || true
