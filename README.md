@@ -138,6 +138,7 @@ Le journal se trouve dans `~/.cache/dxo-photolab-install/install.log`.
 | Réglage | Raison |
 |---|---|
 | `VK_DRIVER_FILES=…/nvidia_icd.json` | Ne laisser voir à Wine que la carte NVIDIA. Sinon, `llvmpipe` (une carte graphique logicielle) est utilisée par le moteur d'IA. |
+| `KRB5CCNAME=FILE:~/.wine-dxo/.no-kerberos-ccache` | Cache Kerberos vide (le fichier n'existe pas). Avec un ticket Kerberos valide (`klist`), Wine essaie Kerberos pour `host/localhost`, puis le repli sur NTLM échoue (`SEC_E_BUFFER_TOO_SMALL`) : PhotoLab ne peut pas joindre le moteur d'export, et l'export reste bloqué. Sans ticket, Wine utilise NTLM directement. |
 | `WEBVIEW2_ADDITIONAL_BROWSER_ARGUMENTS="--no-sandbox --disable-gpu --disable-gpu-compositing"` | Le navigateur de WebView2 plante sous Wine sans ces options. |
 | `fix-user-config.py` | Remet `UseWindowsMLAccelerationWhenAvailable=False` à chaque démarrage. |
 | Vérification de `dxcore.dll` | Si Wine a été mis à jour, le lanceur refait la copie modifiée. Si le patch ne s'applique plus, il la supprime et affiche une notification : PhotoLab utilise alors le processeur. |
@@ -158,7 +159,7 @@ Le journal se trouve dans `~/.cache/dxo-photolab-install/install.log`.
 | Symptôme | Où regarder / que faire |
 |---|---|
 | Erreur dans PhotoLab | `~/.wine-dxo/drive_c/users/$USER/AppData/Local/DxO/DxO PhotoLab 9/Logs/DxO.PhotoLab.txt` |
-| Export bloqué | Même dossier, `DopCor.txt`. Vérifier `which ntlm_auth` (paquet `winbind`). |
+| Export bloqué | Même dossier, `DopCor.txt`. Vérifier `which ntlm_auth` (paquet `winbind`). Si `DxO.PhotoLab.txt` contient « Unable to contact DopCor instance » et que `klist` montre un ticket : lanceur créé avant cette correction, `./install-dxo-photolab.sh --skip-system --redo launcher`. |
 | Carte graphique absente des préférences | Vérifier que `dxcore.dll` est bien dans le dossier de PhotoLab, puis `./install-dxo-photolab.sh --skip-system --redo gpu-dxcore`. |
 | Processus Wine bloqués | `WINEPREFIX=~/.wine-dxo wineserver -k` |
 
