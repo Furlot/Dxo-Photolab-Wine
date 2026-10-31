@@ -106,7 +106,7 @@ Le journal se trouve dans `~/.cache/dxo-photolab-install/install.log`.
 |---|---|
 | `prefix` | Préfixe Wine 64 bits `~/.wine-dxo`. |
 | `dotnet48` | .NET Framework 4.8 (winetricks). |
-| `vcrun2022` | Runtimes Visual C++ 2022 x86 et x64, téléchargés chez Microsoft. |
+| `vcrun2022` | Runtimes Visual C++ 2022 x86 et x64, téléchargés chez Microsoft. `concrt140` est forcée en DLL native (`HKCU\Software\Wine\DllOverrides`) : il manque à celle de Wine `Concurrency::details::_Concurrent_queue_iterator_base_v4`, et les images restent sur « Loading, please wait... ». |
 | `winetricks-misc` | `d3dcompiler_47`, `corefonts`, mode Windows 11, version 24H2 (build 26100) dans le registre. |
 | `webview2` | Microsoft Edge WebView2 Runtime, version autonome. |
 | `dxvk-vkd3d` | vkd3d-proton 3.0.1 (DirectX 12) et DXVK 3.1.1 (DirectX 9 à 11). Pour `msedgewebview2.exe`, ce sont les DLL DirectX intégrées à Wine qui restent utilisées : DXVK ne gère pas la composition utilisée par WebView2. |
@@ -160,6 +160,7 @@ Le journal se trouve dans `~/.cache/dxo-photolab-install/install.log`.
 | Erreur dans PhotoLab | `~/.wine-dxo/drive_c/users/$USER/AppData/Local/DxO/DxO PhotoLab 9/Logs/DxO.PhotoLab.txt` |
 | Export bloqué | Même dossier, `DopCor.txt`. Vérifier `which ntlm_auth` (paquet `winbind`). |
 | Carte graphique absente des préférences | Vérifier que `dxcore.dll` est bien dans le dossier de PhotoLab, puis `./install-dxo-photolab.sh --skip-system --redo gpu-dxcore`. |
+| Images bloquées sur « Loading, please wait... » | Préfixe installé avant cette correction : `./install-dxo-photolab.sh --skip-system --redo vcrun2022`. |
 | Processus Wine bloqués | `WINEPREFIX=~/.wine-dxo wineserver -k` |
 
 ## Désinstallation
